@@ -1,6 +1,6 @@
 "use client";
 
-import MapInner from "./components/MapInner";
+import MapInner from "./features/map/MapInner";
 
 export default function Home() {
     return (
