@@ -4,33 +4,25 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// onClick is optional for flexibility
 interface MapInnerProps {
     onClick: (event: LeafletMouseEvent) => void;
 }
 
-interface ClickHandlerProps {
-    onClick: (event: LeafletMouseEvent) => void;
-}
-
-function MapClickHandler({ onClick }: ClickHandlerProps) {
+// ensure onClick is always passed as a function from parent (Map.tsx).
+function MapClickHandler({ onClick }: MapInnerProps) {
     useMapEvents({
         click: (event: LeafletMouseEvent) => {
-            console.log("Leaflet click event:", event);
             console.log("Lat:", event.latlng.lat, "Lon:", event.latlng.lng);
-
             onClick(event);
         },
     });
-    return null; // This component only registers events
+    return null;
 }
 
 export default function MapInner({ onClick }: MapInnerProps) {
     return (
-        <MapContainer
-            center={[51.505, -0.09]}
-            zoom={13}
-            style={{ height: "100vh", width: "100%" }}
-        >
+        <MapContainer center={[51.505, -0.09]} zoom={13} className="h-96 w-96">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

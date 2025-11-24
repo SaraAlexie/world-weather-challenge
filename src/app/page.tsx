@@ -1,12 +1,14 @@
 "use client";
 
-import MapInner from "./features/map/MapInner";
+import Map from "./features/map/Map";
+import WeatherPanel from "./features/weather/WeatherPanel";
 
 export default function Home() {
     return (
         <>
             <h1>Weather app</h1>
-            <MapInner />
+            <Map />
+            <WeatherPanel />
         </>
     );
 }
