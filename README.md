@@ -26,8 +26,12 @@ To use Leaflet inside a Next.js App Router project, we must disable server-side 
 
 ## Flow of latitude and longitude between components
 
-When the user clicks on the map, the click event is handled inside MapClickHandler (within MapInner.tsx). This event captures the latitude(lat) and longitude(lon) of the clicked location and passes them to the onClick function. The onClick handler is defined in useMapClick, where it calls setLocation from the WeatherContextProvider.
+When the user clicks on the map, the click event is handled inside MapClickHandler (within MapInner.tsx). This event captures the latitude (lat) and longitude (lon) of the clicked location and passes them to the onClick function. The onClick handler is defined in useMapClick, where it calls setLocation from the WeatherContextProvider.
 
-The WeatherContextProvider stores the selected lat and lon in React context. Any component subscribed to this context — such as WeatherPanel — can access the current location using the useWeatherContext hook.
+The WeatherContextProvider stores the selected lat and lon in React context. Any component subscribed to this context, such as WeatherPanel, can access the current location using the useWeatherContext hook.
 
 WeatherPanel reads the coordinates from context and triggers the useWeather hook to fetch weather data using React Query. This ensures that weather information updates reactively whenever the user selects a new location on the map.
+
+## Use of AI
+
+I have used AI in the developement of this project in what I believe to be a responsible manner. I have used it mostly for debugging, help with documentation and for "low hanging fruit", the tasks that don't require too much human brain power.

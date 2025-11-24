@@ -1,6 +1,7 @@
 "use client";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useWeather } from "./UseWeather";
+import WeatherCard from "../../components/ui/WeatherCard";
 import UnitToggle from "./UnitToggle";
 
 export default function WeatherPanel() {
@@ -14,7 +15,11 @@ export default function WeatherPanel() {
     const { data, isLoading, error } = useWeather(safeLat, safeLon, unit);
 
     if (lat === null || lon === null) {
-        return <p>Click the map to get weather data.</p>;
+        return (
+            <p className="text-sm text-gray-500">
+                Click the map to get weather data.
+            </p>
+        );
     }
     if (isLoading) return <p>Loading weather...</p>;
     if (error) return <p>Error loading weather.</p>;
@@ -22,16 +27,5 @@ export default function WeatherPanel() {
 
     data && console.log("Weather data:", data);
 
-    return (
-        <div>
-            <h2>Weather Panel</h2>
-            <h3>
-                Location: {data.name}, {data.sys.country}
-            </h3>
-            <h3>Temp: {data?.main?.temp}</h3>
-            <h3>Longitude: {data.coord.lon}</h3>
-            <h3>Latitude: {data.coord.lat}</h3>
-            <UnitToggle />
-        </div>
-    );
+    return <WeatherCard data={data} />;
 }
