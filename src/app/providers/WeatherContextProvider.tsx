@@ -2,16 +2,23 @@
 
 import { createContext, useContext, useState } from "react";
 
-// define type/shape of location
 interface Location {
     lat: number | null;
     lon: number | null;
 }
 
-// Definition of context value and what it exposes
 interface WeatherContextValue {
     location: Location;
     setLocation: (loc: Location) => void;
+}
+
+type Unit = "metric" | "imperial";
+
+interface WeatherContextValue {
+    location: Location;
+    setLocation: (loc: Location) => void;
+    unit: Unit;
+    setUnit: (unit: Unit) => void;
 }
 
 // create the context
@@ -30,8 +37,12 @@ export function WeatherContextProvider({
         lon: null,
     });
 
+    const [unit, setUnit] = useState<Unit>("metric");
+
     return (
-        <WeatherContext.Provider value={{ location, setLocation }}>
+        <WeatherContext.Provider
+            value={{ location, setLocation, unit, setUnit }}
+        >
             {children}
         </WeatherContext.Provider>
     );
