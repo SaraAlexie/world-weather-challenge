@@ -4,7 +4,7 @@ import { useWeather } from "./UseWeather";
 import UnitToggle from "./UnitToggle";
 
 export default function WeatherPanel() {
-    const { location, unit, setUnit } = useWeatherContext();
+    const { location, unit } = useWeatherContext();
     const { lat, lon } = location;
 
     // fallback dummy values (won’t trigger fetch because of `enabled`)
@@ -12,10 +12,6 @@ export default function WeatherPanel() {
     const safeLon = lon ?? 0;
 
     const { data, isLoading, error } = useWeather(safeLat, safeLon, unit);
-
-    const toggleUnit = () => {
-        setUnit(unit === "metric" ? "imperial" : "metric");
-    };
 
     if (lat === null || lon === null) {
         return <p>Click the map to get weather data.</p>;
