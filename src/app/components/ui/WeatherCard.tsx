@@ -1,8 +1,9 @@
 "use client";
+import { WeatherData } from "../../types/weather";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
 
-export default function WeatherCard({ data }: { data: any }) {
+export default function WeatherCard({ data }: { data: WeatherData }) {
     const { unit } = useWeatherContext();
 
     return (

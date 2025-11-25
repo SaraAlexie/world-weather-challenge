@@ -2,7 +2,6 @@
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useWeather } from "./UseWeather";
 import WeatherCard from "../../components/ui/WeatherCard";
-import UnitToggle from "./UnitToggle";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
