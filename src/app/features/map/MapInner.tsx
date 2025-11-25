@@ -2,7 +2,6 @@
 
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
-import MapMarker from "./MapMarker";
 import "leaflet/dist/leaflet.css";
 
 // onClick is optional for flexibility
@@ -32,7 +31,6 @@ export default function MapInner({ onClick }: MapInnerProps) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapClickHandler onClick={onClick} />
-            <MapMarker />
         </MapContainer>
     );
 }
