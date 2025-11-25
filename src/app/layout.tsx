@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import QueryProvider from "./providers/QueryProvider";
 import { WeatherContextProvider } from "./providers/WeatherContextProvider";
+import { MapMarkerContextProvider } from "./providers/MapMarkerContextProvider";
 
 export const metadata: Metadata = {
     title: "World Weather App",
@@ -17,7 +18,11 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <QueryProvider>
-                    <WeatherContextProvider>{children}</WeatherContextProvider>
+                    <MapMarkerContextProvider>
+                        <WeatherContextProvider>
+                            {children}
+                        </WeatherContextProvider>
+                    </MapMarkerContextProvider>
                 </QueryProvider>
             </body>
         </html>

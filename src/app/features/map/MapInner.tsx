@@ -2,7 +2,11 @@
 
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
+import MapMarker from "./MapMarker";
 import "leaflet/dist/leaflet.css";
+// fix for compatibility of default icons in Leaflet when using Next.js
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
 // onClick is optional for flexibility
 interface MapInnerProps {
@@ -31,6 +35,7 @@ export default function MapInner({ onClick }: MapInnerProps) {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapClickHandler onClick={onClick} />
+            <MapMarker />
         </MapContainer>
     );
 }
