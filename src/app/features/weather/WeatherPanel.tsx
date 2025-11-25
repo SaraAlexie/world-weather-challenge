@@ -2,6 +2,7 @@
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useWeather } from "./UseWeather";
 import WeatherCard from "../../components/ui/WeatherCard";
+import SearchLocation from "../location/SearchLocation";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
@@ -15,14 +16,22 @@ export default function WeatherPanel() {
 
     if (lat === null || lon === null) {
         return (
-            <p className="text-sm text-gray-500">
-                Click the map to get weather data.
-            </p>
+            <div>
+                <p className="text-sm text-gray-500">
+                    Click the map to get weather data or search for a location
+                </p>
+                <SearchLocation />
+            </div>
         );
     }
     if (isLoading) return <p>Loading weather...</p>;
     if (error) return <p>Error loading weather.</p>;
     if (!data) return <p>No data available.</p>;
 
-    return <WeatherCard data={data} />;
+    return (
+        <>
+            <WeatherCard data={data} />
+            <SearchLocation />
+        </>
+    );
 }

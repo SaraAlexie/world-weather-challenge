@@ -10,6 +10,6 @@ export function useWeather(
     queryKey: ["weather", lat, lon, unit],
     queryFn: () => fetchWeather(lat, lon, unit),
     enabled: lat !== null && lon !== null, // guards initial call
-    staleTime: 1000 * 60 * 5, // 5 minutes, how long data is fresh before refetch
+    staleTime: 1000 * 60 * 60, // 60 minutes, how long data is fresh before refetch
   });
 }
