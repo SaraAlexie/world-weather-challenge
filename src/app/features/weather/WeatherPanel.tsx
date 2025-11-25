@@ -24,7 +24,5 @@ export default function WeatherPanel() {
     if (error) return <p>Error loading weather.</p>;
     if (!data) return <p>No data available.</p>;
 
-    data && console.log("Weather data:", data);
-
     return <WeatherCard data={data} />;
 }

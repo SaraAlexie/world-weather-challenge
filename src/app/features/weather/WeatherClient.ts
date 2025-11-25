@@ -7,8 +7,6 @@ export async function fetchWeather(lat: number, lon: number, unit: "metric" | "i
     const url = `${BASE_URL}?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`;
     const response = await fetch(url);
 
-    console.log("Fetching weather from URL:", url);
-
     if(!response.ok) {
         throw new Error(`Failed to fetch weather data: ${response.statusText}`);
     }
