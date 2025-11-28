@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
+import { useDebounce } from "../../hooks/UseDebounce";
 
 const API_KEY = process.env.NEXT_PUBLIC_OPEN_WEATHER_KEY;
 const BASE_URL = "https://api.openweathermap.org/geo/1.0/direct?q=";
@@ -67,11 +68,13 @@ function formatLocationName(loc: GeoLocation): string {
 export default function SearchLocation() {
     // local state to store the input query
     const [query, setQuery] = useState("");
+    // debounced version of the query to limit API calls when typing
+    const debouncedQuery = useDebounce(query, 500);
     // extracts context functions for updating weather and map state
     const { setLocation } = useWeatherContext();
     const { setMarkerPosition } = useMapMarkerContext();
     // executes the geolocation query based on the current input query
-    const { data, isLoading, error } = useLocation(query);
+    const { data, isLoading, error } = useLocation(debouncedQuery);
 
     // guard against null/undefined location
     // update weather context and map marker position

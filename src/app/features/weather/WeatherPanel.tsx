@@ -9,6 +9,7 @@ export default function WeatherPanel() {
     const { lat, lon } = location;
 
     // fallback dummy values (won’t trigger fetch because of `enabled`)
+    // but satisfy the type requirements of useWeather
     const safeLat = lat ?? 0;
     const safeLon = lon ?? 0;
 
