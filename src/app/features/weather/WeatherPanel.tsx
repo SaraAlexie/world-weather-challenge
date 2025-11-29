@@ -39,10 +39,10 @@ export default function WeatherPanel() {
             style={{ background: theme.gradient, color: theme.textColor }}
         >
             <div className="max-w-md mx-auto">
-                <WeatherCard data={data} />
-                <div className="mt-4">
+                <div className="bg-white/90 backdrop-blur rounded-lg p-3 mb-4 shadow">
                     <SearchLocation />
                 </div>
+                <WeatherCard data={data} />
             </div>
         </div>
     );

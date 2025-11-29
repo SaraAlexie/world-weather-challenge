@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { DEFAULT_MARKER } from "../config/defaults";
 
 interface MapMarkerContextType {
     markerPosition: [number, number] | null;
@@ -18,7 +19,7 @@ export function MapMarkerContextProvider({
 }) {
     const [markerPosition, setMarkerPosition] = useState<
         [number, number] | null
-    >(null);
+    >(DEFAULT_MARKER);
 
     return (
         <MapMarkerContext.Provider

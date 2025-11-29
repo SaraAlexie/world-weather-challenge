@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
+import { DEFAULT_LOCATION } from "../config/defaults";
 
 interface Location {
     lat: number | null;
@@ -33,8 +34,8 @@ export function WeatherContextProvider({
     children: React.ReactNode;
 }) {
     const [location, setLocation] = useState<Location>({
-        lat: null,
-        lon: null,
+        lat: DEFAULT_LOCATION.lat,
+        lon: DEFAULT_LOCATION.lon,
     });
 
     const [unit, setUnit] = useState<Unit>("metric");

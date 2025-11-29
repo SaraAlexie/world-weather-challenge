@@ -20,7 +20,7 @@ export function getWeatherTheme(main: string | undefined): WeatherTheme {
         case "drizzle":
             return {
                 gradient: "linear-gradient(135deg,#4FC3F7 0%,#0288D1 100%)",
-                textColor: "#FFFFFF",
+                textColor: "#0f172a",
             };
         case "thunderstorm":
             return {

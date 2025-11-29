@@ -2,6 +2,7 @@
 import { WeatherData } from "../../types/weather";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
+import WeatherDetails from "./WeatherDetails";
 import {
     WiDaySunny,
     WiCloud,
@@ -40,28 +41,34 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
     const description = data.weather?.[0]?.description ?? "";
 
     return (
-        <div className="max-w-md w-full mx-auto glass-card rounded-2xl p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-xl font-bold">{data.name}, {data.sys.country}</h2>
-                    <p className="capitalize text-sm muted-text">{description}</p>
+        <div className="w-full mx-auto glass-card rounded-lg sm:rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6 max-w-xs sm:max-w-sm lg:max-w-md">
+            <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex-1 min-w-0">
+                    <h2 className="text-base sm:text-lg lg:text-xl font-bold truncate">
+                        {data.name}, {data.sys.country}
+                    </h2>
+                    <p className="capitalize text-xs sm:text-sm muted-text truncate">
+                        {description}
+                    </p>
                 </div>
 
-                <div>
+                <div className="shrink-0 self-start sm:self-center">
                     <WeatherIcon main={main} />
                 </div>
             </div>
 
-            <div className="text-5xl font-extrabold">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold">
                 {Math.round(data.main.temp)}°{unit === "metric" ? "C" : "F"}
             </div>
 
             <hr className="border-white/30" />
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm">
                 <div>
                     <p className="font-medium muted-text">Feels like</p>
-                    <p className="font-semibold">{Math.round(data.main.feels_like)}°</p>
+                    <p className="font-semibold">
+                        {Math.round(data.main.feels_like)}°
+                    </p>
                 </div>
                 <div>
                     <p className="font-medium muted-text">Humidity</p>
@@ -69,15 +76,21 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 </div>
                 <div>
                     <p className="font-medium muted-text">High</p>
-                    <p className="font-semibold">{Math.round(data.main.temp_max)}°</p>
+                    <p className="font-semibold">
+                        {Math.round(data.main.temp_max)}°
+                    </p>
                 </div>
                 <div>
                     <p className="font-medium muted-text">Low</p>
-                    <p className="font-semibold">{Math.round(data.main.temp_min)}°</p>
+                    <p className="font-semibold">
+                        {Math.round(data.main.temp_min)}°
+                    </p>
                 </div>
             </div>
 
             <UnitToggle />
+
+            <WeatherDetails data={data} />
         </div>
     );
 }

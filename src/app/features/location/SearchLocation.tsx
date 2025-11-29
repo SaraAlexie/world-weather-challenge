@@ -82,6 +82,7 @@ export default function SearchLocation() {
     // determines if there are results to display
     // only true if query is non-empty and data has results
     const hasResults = query && data && data.length > 0;
+    hasResults && console.log("Search results:", data);
 
     return (
         <div>

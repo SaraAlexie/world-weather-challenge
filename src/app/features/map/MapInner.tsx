@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
 import MapMarker from "./MapMarker";
 import MapHandlers from "./MapHandlers";
+import { DEFAULT_MARKER } from "../../config/defaults";
 import "leaflet/dist/leaflet.css";
 // fix for compatibility of default icons in Leaflet when using Next.js
 import "leaflet-defaulticon-compatibility";
@@ -27,7 +28,7 @@ function MapClickHandler({ onClick }: MapInnerProps) {
 export default function MapInner({ onClick }: MapInnerProps) {
     return (
         <MapContainer
-            center={[51.505, -0.09]}
+            center={DEFAULT_MARKER}
             zoom={13}
             className="h-screen w-full"
         >
