@@ -4,14 +4,6 @@ import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
 import { useDebounce } from "../../hooks/UseDebounce";
 
-const API_KEY = process.env.NEXT_PUBLIC_OPEN_WEATHER_KEY;
-const BASE_URL = "https://api.openweathermap.org/geo/1.0/direct?q=";
-
-// warns in development if API key is missing
-if (!API_KEY) {
-    console.warn("OpenWeather API key is missing.");
-}
-
 // shape of location data from OpenWeather Geocoding API
 export interface GeoLocation {
     name: string;
@@ -21,7 +13,7 @@ export interface GeoLocation {
     country?: string;
 }
 
-// fetch location data from OpenWeather Geocoding API
+// fetch location data from backend API
 // limit parameter controls number of results returned
 // returns an array of GeoLocation objects
 // throws error if fetch fails
@@ -32,9 +24,7 @@ export async function fetchLocation(
 ): Promise<GeoLocation[]> {
     if (!query) return [];
 
-    const url = `${BASE_URL}${encodeURIComponent(
-        query
-    )}&limit=${limit}&appid=${API_KEY}`;
+    const url = `/api/location?q=${encodeURIComponent(query)}&limit=${limit}`;
     const response = await fetch(url);
 
     if (!response.ok) {
