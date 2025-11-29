@@ -3,6 +3,7 @@ import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useWeather } from "./UseWeather";
 import WeatherCard from "../../components/ui/WeatherCard";
 import SearchLocation from "../location/SearchLocation";
+import { getWeatherTheme } from "../../styles/weatherThemes";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
@@ -29,10 +30,20 @@ export default function WeatherPanel() {
     if (error) return <p>Error loading weather.</p>;
     if (!data) return <p>No data available.</p>;
 
+    const main = data.weather?.[0]?.main;
+    const theme = getWeatherTheme(main);
+
     return (
-        <>
-            <WeatherCard data={data} />
-            <SearchLocation />
-        </>
+        <div
+            className="weather-panel-bg"
+            style={{ background: theme.gradient, color: theme.textColor }}
+        >
+            <div className="max-w-md mx-auto">
+                <WeatherCard data={data} />
+                <div className="mt-4">
+                    <SearchLocation />
+                </div>
+            </div>
+        </div>
     );
 }

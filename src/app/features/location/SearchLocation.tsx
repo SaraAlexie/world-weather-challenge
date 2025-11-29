@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
 import { useDebounce } from "../../hooks/UseDebounce";
+import { FiSearch, FiLoader } from "react-icons/fi";
 
 // shape of location data from OpenWeather Geocoding API
 export interface GeoLocation {
@@ -85,22 +86,34 @@ export default function SearchLocation() {
     return (
         <div>
             <form
-                onSubmit={(e) => e.preventDefault()} // prevent page reload on submit
+                onSubmit={(e) => e.preventDefault()}
                 className="search-location mt-2"
             >
-                <label htmlFor="location-search" />
+                <label htmlFor="location-search" className="sr-only">
+                    Search location
+                </label>
                 <div className="flex gap-2">
-                    <input
-                        id="location-search"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Enter city or place name"
-                        aria-label="Search location"
-                        className="w-full rounded border px-3 py-2"
-                    />
+                    <div className="w-full search-input-wrapper">
+                        <span className="search-input-icon text-gray-500">
+                            {isLoading ? (
+                                <FiLoader className="animate-spin" />
+                            ) : (
+                                <FiSearch />
+                            )}
+                        </span>
+                        <input
+                            id="location-search"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder="Enter city or place name"
+                            aria-label="Search location"
+                            className="w-full rounded border px-3 py-2 search-input-field"
+                        />
+                    </div>
                     <button
                         type="submit"
                         className="rounded bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
+                        aria-label="Search"
                     >
                         Search
                     </button>
@@ -125,18 +138,20 @@ export default function SearchLocation() {
                 </>
             )}
 
-            {hasResults && ( // display results only if there are any
-                <ul className="mt-3 border rounded divide-y">
+            {hasResults && (
+                <ul className="mt-3 border rounded divide-y search-results-bg shadow-lg fade-in overflow-hidden">
                     {data!.map((loc) => (
                         <li
-                            //safest composite key as name+lat+lon+state+country will almost never duplicate
                             key={`${loc.name}-${loc.lat}-${loc.lon}-${
                                 loc.state ?? ""
                             }-${loc.country ?? ""}`}
                             onClick={() => handleSelectLocation(loc)}
-                            className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm"
+                            className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm flex items-center gap-2"
                         >
-                            {formatLocationName(loc)}
+                            <FiSearch className="text-gray-500" />
+                            <span className="truncate">
+                                {formatLocationName(loc)}
+                            </span>
                         </li>
                     ))}
                 </ul>
