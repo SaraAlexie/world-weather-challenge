@@ -29,7 +29,7 @@ function MetricCard({ icon, label, value, unit, bar }: MetricCardProps) {
             {bar !== undefined && (
                 <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-gradient-to-r from-cyan-300 to-blue-500 rounded-full transition-all"
+                        className="h-full bg-linear-to-r from-cyan-300 to-blue-500 rounded-full transition-all"
                         style={{ width: `${Math.min(bar, 100)}%` }}
                     />
                 </div>

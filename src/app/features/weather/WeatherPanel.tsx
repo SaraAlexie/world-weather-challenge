@@ -40,7 +40,7 @@ export default function WeatherPanel() {
         >
             <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
                 <WeatherCard data={data} />
-                <div className="flex-shrink-0 w-full md:w-auto">
+                <div className="shrink-0 w-full md:w-auto">
                     <SearchLocation />
                 </div>
             </div>

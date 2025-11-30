@@ -9,7 +9,7 @@ export function getWeatherTheme(main: string | undefined): WeatherTheme {
         case "clear":
             return {
                 gradient: "linear-gradient(135deg,#FFD54A 0%,#FF8A65 100%)",
-                textColor: "#111827",
+                textColor: "#0f172a",
             };
         case "clouds":
             return {
@@ -25,7 +25,7 @@ export function getWeatherTheme(main: string | undefined): WeatherTheme {
         case "thunderstorm":
             return {
                 gradient: "linear-gradient(135deg,#7F00FF 0%,#E100FF 100%)",
-                textColor: "#FFFFFF",
+                textColor: "#0f172a",
             };
         case "snow":
             return {
@@ -37,7 +37,7 @@ export function getWeatherTheme(main: string | undefined): WeatherTheme {
         case "fog":
             return {
                 gradient: "linear-gradient(135deg,#B0BEC5 0%,#78909C 100%)",
-                textColor: "#FFFFFF",
+                textColor: "#0f172a",
             };
         default:
             return {
