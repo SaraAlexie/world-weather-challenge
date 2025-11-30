@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
@@ -68,6 +68,9 @@ export default function SearchLocation() {
     // executes the geolocation query based on the current input query
     const { data, isLoading, error } = useLocation(debouncedQuery);
 
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const resultsRef = useRef<HTMLUListElement>(null);
+
     // guard against null/undefined location
     // update weather context and map marker position
     // fills the input with the selected location name
@@ -78,13 +81,39 @@ export default function SearchLocation() {
         setMarkerPosition([loc.lat, loc.lon]);
 
         setQuery(formatLocationName(loc));
-        setShowSearch(false);
+        setSelectedIndex(-1); // reset selection
     };
 
     // determines if there are results to display
     // only true if query is non-empty and data has results
     const hasResults = query && data && data.length > 0;
     hasResults && console.log("Search results:", data);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!hasResults) return;
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setSelectedIndex((prev) => (prev + 1) % data!.length);
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setSelectedIndex(
+                (prev) => (prev - 1 + data!.length) % data!.length
+            );
+        } else if (e.key === "Enter" && selectedIndex >= 0) {
+            e.preventDefault();
+            handleSelectLocation(data![selectedIndex]);
+        }
+    };
+
+    useEffect(() => {
+        if (resultsRef.current && selectedIndex >= 0) {
+            const activeItem = resultsRef.current.children[
+                selectedIndex
+            ] as HTMLElement;
+            if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
+        }
+    }, [selectedIndex]);
 
     return (
         <div className="relative w-full">
@@ -126,6 +155,7 @@ export default function SearchLocation() {
                                     id="location-search"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                     placeholder="Enter city or place name"
                                     aria-label="Search location"
                                     className="w-full rounded border border-gray-400 px-3 py-2 search-input-field placeholder-gray-500 text-gray-800 bg-white"
@@ -163,13 +193,17 @@ export default function SearchLocation() {
 
                     {hasResults && (
                         <ul className="mt-3 border rounded divide-y search-results-bg shadow-lg fade-in overflow-hidden">
-                            {data!.map((loc) => (
+                            {data!.map((loc, idx) => (
                                 <li
                                     key={`${loc.name}-${loc.lat}-${loc.lon}-${
                                         loc.state ?? ""
                                     }-${loc.country ?? ""}`}
                                     onClick={() => handleSelectLocation(loc)}
-                                    className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm flex items-center gap-2"
+                                    className={`px-3 py-2 cursor-pointer text-sm flex items-center gap-2 ${
+                                        idx === selectedIndex
+                                            ? "bg-blue-100"
+                                            : "hover:bg-blue-50"
+                                    }`}
                                 >
                                     <FiSearch className="text-gray-500" />
                                     <span className="truncate">
