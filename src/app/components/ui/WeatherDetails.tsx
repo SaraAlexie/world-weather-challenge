@@ -61,7 +61,7 @@ export default function WeatherDetails({ data }: { data: WeatherData }) {
     const cloudiness = data.clouds.all;
 
     return (
-        <div className="space-y-3 mt-4">
+        <div className="space-y-3 mt-4 px-1 sm:px-2">
             <h3 className="text-sm font-semibold px-1">Detailed Conditions</h3>
 
             <div className="grid grid-cols-2 gap-3">

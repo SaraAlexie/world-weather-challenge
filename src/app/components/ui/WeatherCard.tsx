@@ -41,7 +41,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
     const description = data.weather?.[0]?.description ?? "";
 
     return (
-        <div className="w-full mx-auto glass-card rounded-lg sm:rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 lg:space-y-6 max-w-xs sm:max-w-sm lg:max-w-md">
+        <div className="w-full max-w-md mx-auto glass-card rounded-lg p-4 sm:p-6 flex-shrink-0">
             <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex-1 min-w-0">
                     <h2 className="text-base sm:text-lg lg:text-xl font-bold truncate">
@@ -88,9 +88,9 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 </div>
             </div>
 
-            <UnitToggle />
-
             <WeatherDetails data={data} />
+
+            <UnitToggle />
         </div>
     );
 }

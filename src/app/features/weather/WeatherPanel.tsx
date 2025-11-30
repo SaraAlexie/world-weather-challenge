@@ -38,11 +38,11 @@ export default function WeatherPanel() {
             className="weather-panel-bg"
             style={{ background: theme.gradient, color: theme.textColor }}
         >
-            <div className="max-w-md mx-auto">
-                <div className="bg-white/90 backdrop-blur rounded-lg p-3 mb-4 shadow">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
+                <WeatherCard data={data} />
+                <div className="flex-shrink-0 w-full md:w-auto">
                     <SearchLocation />
                 </div>
-                <WeatherCard data={data} />
             </div>
         </div>
     );

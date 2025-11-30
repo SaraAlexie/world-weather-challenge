@@ -1,18 +1,15 @@
+/* globals.css */
 @import "tailwindcss";
 
 :root {
     box-sizing: border-box;
+    --glass-bg: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-blur: 8px;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-}
-
-/* design utilities for gradients and glass-morphism */
-:root {
-    --glass-bg: rgba(255, 255, 255, 0.12);
-    --glass-border: rgba(255, 255, 255, 0.18);
-    --glass-blur: 8px;
 }
 
 .glass-card {
@@ -45,7 +42,6 @@ body {
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* small animation utilities */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -56,6 +52,7 @@ body {
         transform: translateY(0);
     }
 }
+
 .fade-in {
     animation: fadeIn 220ms ease both;
 }
@@ -63,6 +60,7 @@ body {
 .search-input-wrapper {
     position: relative;
 }
+
 .search-input-icon {
     position: absolute;
     left: 10px;
@@ -70,12 +68,34 @@ body {
     transform: translateY(-50%);
     pointer-events: none;
 }
+
 .search-input-field {
-    padding-left: 2.5rem; /* leave space for icon */
+    padding-left: 2.5rem;
 }
 
 .search-results-bg {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+}
+
+/* responsive utilities for layout refinement */
+.weather-header {
+    @apply flex flex-col gap-4 lg:flex-row lg:items-start;
+}
+
+.search-bar-container {
+    @apply bg-white/90 backdrop-blur rounded-lg p-3 shadow w-full lg:w-auto;
+}
+
+.weather-content {
+    @apply flex flex-col gap-4 lg:flex-row;
+}
+
+.weather-details-container {
+    @apply w-full lg:w-2/3;
+}
+
+.weather-card-container {
+    @apply w-full lg:w-1/3;
 }

@@ -85,7 +85,7 @@ export default function SearchLocation() {
     hasResults && console.log("Search results:", data);
 
     return (
-        <div>
+        <div className="w-full max-w-sm bg-white/90 backdrop-blur rounded-lg p-3 shadow-md">
             <form
                 onSubmit={(e) => e.preventDefault()}
                 className="search-location mt-2"
@@ -108,7 +108,7 @@ export default function SearchLocation() {
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Enter city or place name"
                             aria-label="Search location"
-                            className="w-full rounded border px-3 py-2 search-input-field"
+                            className="w-full rounded border border-gray-400 px-3 py-2 search-input-field placeholder-gray-500 text-gray-800 bg-white"
                         />
                     </div>
                     <button
@@ -134,7 +134,9 @@ export default function SearchLocation() {
                         </p>
                     )}
                     {data && data.length === 0 && (
-                        <p className="mt-2 text-sm">No results found.</p>
+                        <p className="mt-2 text-black text-sm">
+                            No results found.
+                        </p>
                     )}
                 </>
             )}
