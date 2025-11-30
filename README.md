@@ -47,13 +47,3 @@ The SearchLocation component provides a location-search UI using the OpenWeather
 ## Use of AI
 
 I have used AI in the developement of this project in what I believe to be a responsible manner. I have used it mostly for debugging, help with documentation and for "low hanging fruit", the tasks that don't require too much human brain power, or adding styling or extra things that are nice to have but not need to have. One component that is nice to have and completly made using AI is MapHandlers.tsx. It makes a cool zoom like animation to the location which has been entered into the searchform.
-
-## What should be improved in the future?
-
-Search function could use some UI improvements to the dropdown and get autocomplete search.
-The weather data could be improved by adding data for a few days or weeks in the future, or just more weather data in general.
-The map could have a different background more suited for a weather app if desired.
-UI in general could be made more elaborate if the clean look is a little too simple
-Addition of unit and integration tests
-Ux enhancements could include search history, favorite locations etc.
-More "life" via animations

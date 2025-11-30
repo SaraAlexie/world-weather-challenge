@@ -47,10 +47,10 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 {/* Header */}
                 <div className="flex flex-row gap-2 sm:gap-3">
                     <div className="flex-1 min-w-0">
-                        <h2 className="text-base sm:text-lg lg:text-xl font-bold truncate">
+                        <h2 className="text-2xl sm:text-4xl font-bold truncate">
                             {data.name}, {data.sys.country}
                         </h2>
-                        <p className="capitalize text-xs sm:text-sm muted-text truncate">
+                        <p className="capitalize text-xs sm:text-base muted-text truncate">
                             {description}
                         </p>
                     </div>
@@ -60,37 +60,43 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 </div>
 
                 {/* Temperature */}
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold">
+                <div className="text-7xl font-extrabold text-center">
                     {Math.round(data.main.temp)}°{unit === "metric" ? "C" : "F"}
                 </div>
 
                 {/* Mini Metrics */}
 
-                <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-center">
                     <div>
-                        <p className="font-medium muted-text">Feels like</p>
-                        <p className="font-semibold">
+                        <p className="font-medium text-lg muted-text">
+                            Feels like
+                        </p>
+                        <p className="font-semibold text-2xl">
                             {Math.round(data.main.feels_like)}°
                             {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
 
                     <div>
-                        <p className="font-medium muted-text">Humidity</p>
-                        <p className="font-semibold">{data.main.humidity}%</p>
+                        <p className="font-medium text-lg muted-text">
+                            Humidity
+                        </p>
+                        <p className="font-semibold text-2xl">
+                            {data.main.humidity}%
+                        </p>
                     </div>
 
                     <div>
-                        <p className="font-medium muted-text">High</p>
-                        <p className="font-semibold">
+                        <p className="font-medium text-lg muted-text">High</p>
+                        <p className="font-semibold text-2xl">
                             {Math.round(data.main.temp_max)}°
                             {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
 
                     <div>
-                        <p className="font-medium muted-text">Low</p>
-                        <p className="font-semibold">
+                        <p className="font-medium text-lg muted-text">Low</p>
+                        <p className="font-semibold text-2xl">
                             {Math.round(data.main.temp_min)}°
                             {unit === "metric" ? "C" : "F"}
                         </p>
