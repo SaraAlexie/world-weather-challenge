@@ -16,6 +16,10 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+# World Weather
+
+Works with the use of World Weather API. To run it locally you will need an API key from the World Weather API.
+
 ## Structure and seperation of concerns
 
 Having a an organized and easy to understand folder structure makes development easier for the whole team and devs new to the project. Seperation of concerns is a fundamental principle that makes software more modular, maintainable, and easier to understand by isolating different functionalities like data management, user interface, and business logic.

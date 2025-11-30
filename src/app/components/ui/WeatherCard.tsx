@@ -41,7 +41,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
     const description = data.weather?.[0]?.description ?? "";
 
     return (
-        <div className="w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col lg:flex-row gap-6">
+        <div className="w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col xl:flex-row gap-6">
             {/* Left: Main Info */}
             <div className="flex-1 space-y-4">
                 {/* Header */}
@@ -65,27 +65,34 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 </div>
 
                 {/* Mini Metrics */}
+
                 <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm">
                     <div>
                         <p className="font-medium muted-text">Feels like</p>
                         <p className="font-semibold">
                             {Math.round(data.main.feels_like)}°
+                            {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
+
                     <div>
                         <p className="font-medium muted-text">Humidity</p>
                         <p className="font-semibold">{data.main.humidity}%</p>
                     </div>
+
                     <div>
                         <p className="font-medium muted-text">High</p>
                         <p className="font-semibold">
                             {Math.round(data.main.temp_max)}°
+                            {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
+
                     <div>
                         <p className="font-medium muted-text">Low</p>
                         <p className="font-semibold">
                             {Math.round(data.main.temp_min)}°
+                            {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
                 </div>
@@ -94,7 +101,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
             </div>
 
             {/* Right: Detailed Metrics */}
-            <div className="lg:w-2/5">
+            <div className="xl:w-2/5">
                 <WeatherDetails data={data} />
             </div>
         </div>

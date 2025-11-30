@@ -27,11 +27,7 @@ function MapClickHandler({ onClick }: MapInnerProps) {
 
 export default function MapInner({ onClick }: MapInnerProps) {
     return (
-        <MapContainer
-            center={DEFAULT_MARKER}
-            zoom={13}
-            className="w-full h-full"
-        >
+        <MapContainer center={DEFAULT_MARKER} zoom={13} className="w-full h-96">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

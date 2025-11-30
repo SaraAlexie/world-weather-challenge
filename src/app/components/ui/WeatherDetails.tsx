@@ -8,7 +8,7 @@ interface MetricCardProps {
     label: string;
     value: string;
     unit?: string;
-    bar?: number; // 0-100 for visual bar
+    bar?: number;
 }
 
 function MetricCard({ icon, label, value, unit, bar }: MetricCardProps) {
@@ -26,6 +26,7 @@ function MetricCard({ icon, label, value, unit, bar }: MetricCardProps) {
                     {unit && ` ${unit}`}
                 </span>
             </div>
+
             {bar !== undefined && (
                 <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
                     <div
@@ -40,31 +41,45 @@ function MetricCard({ icon, label, value, unit, bar }: MetricCardProps) {
 
 export default function WeatherDetails({ data }: { data: WeatherData }) {
     const { unit } = useWeatherContext();
+
     const humidity = data.main.humidity;
-    const windSpeedMs = data.wind.speed;
-    // Convert wind speed based on unit system (metric = km/h, imperial = mph)
-    // Display in proper units: km/h for metric, mph for imperial
+
+    // WIND — uses m/s internally for the bar (always stable)
+    const apiWind = data.wind.speed; // m/s (metric) OR mph (imperial)
+
+    // Convert to m/s for internal logic
+    const windSpeedMs =
+        unit === "metric"
+            ? apiWind // already m/s
+            : apiWind / 2.23694; // mph → m/s
+
+    // Displayed wind speed
     const windSpeed =
         unit === "metric"
-            ? (windSpeedMs * 3.6).toFixed(1)
-            : (windSpeedMs * 2.237).toFixed(1);
-    const windUnit = unit === "metric" ? "km/h" : "mph";
-    // Wind bar always based on m/s to stay consistent
+            ? windSpeedMs.toFixed(1) // m/s
+            : apiWind.toFixed(1); // mph (raw API value)
+
+    const windUnit = unit === "metric" ? "m/s" : "mph";
+
+    // Wind bar (0–15 m/s range)
     const windBar = (windSpeedMs / 15) * 100;
-    const pressureHpa = data.main.pressure;
-    // Convert visibility based on unit system (metric = km, imperial = miles)
+
+    // VISIBILITY — API always returns meters
     const visibility =
         unit === "metric"
-            ? (data.visibility / 1000).toFixed(1)
-            : (data.visibility / 1609.34).toFixed(1);
+            ? (data.visibility / 1000).toFixed(1) // km
+            : (data.visibility / 1609.34).toFixed(1); // miles
+
     const visibilityUnit = unit === "metric" ? "km" : "mi";
+
     const cloudiness = data.clouds.all;
+    const pressure = data.main.pressure;
 
     return (
-        <div className="space-y-3 mt-4 px-1 sm:px-2">
+        <div className="space-y-4 mt-6 px-2">
             <h3 className="text-sm font-semibold px-1">Detailed Conditions</h3>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {/* Humidity */}
                 <MetricCard
                     icon="💧"
@@ -74,7 +89,7 @@ export default function WeatherDetails({ data }: { data: WeatherData }) {
                     bar={humidity}
                 />
 
-                {/* Wind Speed */}
+                {/* Wind */}
                 <MetricCard
                     icon={<WiWindDeg size={24} />}
                     label="Wind"
@@ -87,9 +102,9 @@ export default function WeatherDetails({ data }: { data: WeatherData }) {
                 <MetricCard
                     icon={<WiBarometer size={24} />}
                     label="Pressure"
-                    value={pressureHpa.toString()}
+                    value={pressure.toString()}
                     unit="hPa"
-                    bar={(pressureHpa / 1050) * 100} // normalize 1050 hPa as max
+                    bar={(pressure / 1050) * 100}
                 />
 
                 {/* Visibility */}
@@ -98,7 +113,7 @@ export default function WeatherDetails({ data }: { data: WeatherData }) {
                     label="Visibility"
                     value={visibility}
                     unit={visibilityUnit}
-                    bar={(data.visibility / 10000) * 100} // normalize 10000m (10km) as max (independent of display unit)
+                    bar={(data.visibility / 10000) * 100}
                 />
 
                 {/* Cloud Coverage */}
@@ -117,7 +132,7 @@ export default function WeatherDetails({ data }: { data: WeatherData }) {
                     value={`${Math.round(data.main.temp_min)}–${Math.round(
                         data.main.temp_max
                     )}`}
-                    unit="°"
+                    unit={`°${unit === "metric" ? "C" : "F"}`}
                 />
             </div>
         </div>
