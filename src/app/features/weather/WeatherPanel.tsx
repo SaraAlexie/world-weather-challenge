@@ -39,9 +39,14 @@ export default function WeatherPanel() {
             style={{ background: theme.gradient, color: theme.textColor }}
         >
             <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                <WeatherCard data={data} />
-                <div className="shrink-0 w-full md:w-auto">
+                {/* SearchLocation: on top for mobile, on right for desktop */}
+                <div className="order-1 md:order-2 shrink-0 w-full md:w-auto">
                     <SearchLocation />
+                </div>
+
+                {/* WeatherCard: below search on mobile, left on desktop */}
+                <div className="order-2 md:order-1 w-full">
+                    <WeatherCard data={data} />
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 import Header from "./components/ui/Header";
-import Map from "./features/map/Map";
+import MapPanel from "./features/map/MapPanel";
 import WeatherPanel from "./features/weather/WeatherPanel";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
         <>
             <Header />
             <WeatherPanel />
-            <Map />
+            <MapPanel />
         </>
     );
 }

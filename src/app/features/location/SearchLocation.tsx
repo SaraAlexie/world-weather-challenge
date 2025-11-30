@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { FiSearch, FiLoader } from "react-icons/fi";
+import { FiSearch, FiLoader, FiX } from "react-icons/fi";
 
 // shape of location data from OpenWeather Geocoding API
 export interface GeoLocation {
@@ -59,6 +59,7 @@ function formatLocationName(loc: GeoLocation): string {
 export default function SearchLocation() {
     // local state to store the input query
     const [query, setQuery] = useState("");
+    const [showSearch, setShowSearch] = useState(false);
     // debounced version of the query to limit API calls when typing
     const debouncedQuery = useDebounce(query, 500);
     // extracts context functions for updating weather and map state
@@ -77,6 +78,7 @@ export default function SearchLocation() {
         setMarkerPosition([loc.lat, loc.lon]);
 
         setQuery(formatLocationName(loc));
+        setShowSearch(false);
     };
 
     // determines if there are results to display
@@ -85,80 +87,100 @@ export default function SearchLocation() {
     hasResults && console.log("Search results:", data);
 
     return (
-        <div className="w-full max-w-sm bg-white/90 backdrop-blur rounded-lg p-3 shadow-md">
-            <form
-                onSubmit={(e) => e.preventDefault()}
-                className="search-location mt-2"
+        <div className="relative w-full">
+            {/* Toggle Button on Mobile */}
+            <div className="lg:hidden flex justify-end mb-2">
+                <button
+                    onClick={() => setShowSearch((prev) => !prev)}
+                    className="p-2 rounded-full bg-white/70 backdrop-blur text-gray-700 hover:bg-white shadow"
+                    aria-label="Toggle Search"
+                >
+                    {showSearch ? <FiX size={20} /> : <FiSearch size={20} />}
+                </button>
+            </div>
+
+            {/* Full Search UI */}
+            <div
+                className={`transition-all ${
+                    showSearch ? "block" : "hidden"
+                } lg:block`}
             >
-                <label htmlFor="location-search" className="sr-only">
-                    Search location
-                </label>
-                <div className="flex gap-2">
-                    <div className="w-full search-input-wrapper">
-                        <span className="search-input-icon text-gray-500">
-                            {isLoading ? (
-                                <FiLoader className="animate-spin" />
-                            ) : (
-                                <FiSearch />
-                            )}
-                        </span>
-                        <input
-                            id="location-search"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Enter city or place name"
-                            aria-label="Search location"
-                            className="w-full rounded border border-gray-400 px-3 py-2 search-input-field placeholder-gray-500 text-gray-800 bg-white"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="rounded bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
-                        aria-label="Search"
+                <div className="w-full max-w-sm bg-white/90 backdrop-blur rounded-lg p-3 shadow-md">
+                    <form
+                        onSubmit={(e) => e.preventDefault()}
+                        className="search-location mt-2"
                     >
-                        Search
-                    </button>
+                        <label htmlFor="location-search" className="sr-only">
+                            Search location
+                        </label>
+                        <div className="flex gap-2">
+                            <div className="w-full search-input-wrapper">
+                                <span className="search-input-icon text-gray-500">
+                                    {isLoading ? (
+                                        <FiLoader className="animate-spin" />
+                                    ) : (
+                                        <FiSearch />
+                                    )}
+                                </span>
+                                <input
+                                    id="location-search"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    placeholder="Enter city or place name"
+                                    aria-label="Search location"
+                                    className="w-full rounded border border-gray-400 px-3 py-2 search-input-field placeholder-gray-500 text-gray-800 bg-white"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="rounded bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
+                                aria-label="Search"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </form>
+
+                    {query && (
+                        <>
+                            {isLoading && (
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Searching...
+                                </p>
+                            )}
+                            {error && (
+                                <p className="mt-2 text-sm text-red-600">
+                                    Error searching location.
+                                </p>
+                            )}
+                            {data && data.length === 0 && (
+                                <p className="mt-2 text-black text-sm">
+                                    No results found.
+                                </p>
+                            )}
+                        </>
+                    )}
+
+                    {hasResults && (
+                        <ul className="mt-3 border rounded divide-y search-results-bg shadow-lg fade-in overflow-hidden">
+                            {data!.map((loc) => (
+                                <li
+                                    key={`${loc.name}-${loc.lat}-${loc.lon}-${
+                                        loc.state ?? ""
+                                    }-${loc.country ?? ""}`}
+                                    onClick={() => handleSelectLocation(loc)}
+                                    className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm flex items-center gap-2"
+                                >
+                                    <FiSearch className="text-gray-500" />
+                                    <span className="truncate">
+                                        {formatLocationName(loc)}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
-            </form>
-
-            {query && (
-                <>
-                    {isLoading && (
-                        <p className="mt-2 text-sm text-gray-600">
-                            Searching...
-                        </p>
-                    )}
-                    {error && (
-                        <p className="mt-2 text-sm text-red-600">
-                            Error searching location.
-                        </p>
-                    )}
-                    {data && data.length === 0 && (
-                        <p className="mt-2 text-black text-sm">
-                            No results found.
-                        </p>
-                    )}
-                </>
-            )}
-
-            {hasResults && (
-                <ul className="mt-3 border rounded divide-y search-results-bg shadow-lg fade-in overflow-hidden">
-                    {data!.map((loc) => (
-                        <li
-                            key={`${loc.name}-${loc.lat}-${loc.lon}-${
-                                loc.state ?? ""
-                            }-${loc.country ?? ""}`}
-                            onClick={() => handleSelectLocation(loc)}
-                            className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm flex items-center gap-2"
-                        >
-                            <FiSearch className="text-gray-500" />
-                            <span className="truncate">
-                                {formatLocationName(loc)}
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-            )}
+            </div>
         </div>
     );
 }
