@@ -1,6 +1,6 @@
 "use client";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
-import { useWeather } from "./UseWeather";
+import { useWeather } from "../../hooks/WeatherHooks";
 import WeatherCard from "../../components/ui/WeatherCard";
 import SearchLocation from "../location/SearchLocation";
 import { getWeatherTheme } from "../../styles/weatherThemes";
