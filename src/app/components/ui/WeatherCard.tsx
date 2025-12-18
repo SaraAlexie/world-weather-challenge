@@ -2,7 +2,6 @@
 import { WeatherData } from "../../types/weather";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
-import WeatherDetails from "./WeatherDetails";
 import {
     WiDaySunny,
     WiCloud,
@@ -41,7 +40,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
     const description = data.weather?.[0]?.description ?? "";
 
     return (
-        <div className="w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col xl:flex-row gap-6">
+        <div>
             {/* Left: Main Info */}
             <div className="flex-1 space-y-4">
                 {/* Header */}
@@ -104,11 +103,6 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
                 </div>
 
                 <UnitToggle />
-            </div>
-
-            {/* Right: Detailed Metrics */}
-            <div className="xl:w-2/5">
-                <WeatherDetails data={data} />
             </div>
         </div>
     );

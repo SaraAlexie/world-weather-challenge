@@ -12,7 +12,7 @@ export default async function handler(
     return res.status(500).json({ error: "API key is missing" });
   }
 
-  const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${unit}&exclude=minutely,alerts&appid=${API_KEY}`;
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`;
 
   try {
     const response = await fetch(url);
@@ -23,7 +23,7 @@ export default async function handler(
     }
 
     return res.status(200).json(data);
-  } catch (error) {
+  } catch {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }

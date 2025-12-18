@@ -1,9 +1,10 @@
 "use client";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
-import { useWeather } from "../../hooks/WeatherHooks";
+import { useWeather, useForecast } from "../../hooks/WeatherHooks";
 import WeatherCard from "../../components/ui/WeatherCard";
 import SearchLocation from "../location/SearchLocation";
 import { getWeatherTheme } from "../../styles/weatherThemes";
+import WeatherDetails from "./WeatherDetails";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
@@ -45,8 +46,13 @@ export default function WeatherPanel() {
                 </div>
 
                 {/* WeatherCard: below search on mobile, left on desktop */}
-                <div className="order-2 md:order-1 w-full">
+                <div className="order-2 md:order-1 w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col gap-32 xl:flex-row justify-center">
                     <WeatherCard data={data} />
+
+                    {/* Right: Detailed Metrics */}
+                    <div className="xl:w-2/5">
+                        <WeatherDetails data={data} />
+                    </div>
                 </div>
             </div>
         </div>
