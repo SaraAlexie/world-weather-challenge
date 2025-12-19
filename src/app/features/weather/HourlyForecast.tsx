@@ -41,7 +41,7 @@ export default function HourlyForecast({ hourly }: Props) {
                         />
 
                         <p className="text-sm font-semibold">
-                            {Math.round(hour.temp)}°
+                            {Math.round(hour.main.temp)}°
                             {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>

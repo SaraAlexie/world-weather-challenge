@@ -1,7 +1,14 @@
 export interface HourlyForecast {
   dt: number;
-  temp: number;
-  weather: { main: string; description: string; icon: string }[];
+  main: {
+    temp: number;
+  };
+  weather: {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+  }[];
 }
 
 export interface DailyForecast {
@@ -14,11 +21,11 @@ export interface DailyForecast {
 }
 
 export interface ForecastResponse {
-  current: {
-    dt: number;
-    temp: number;
-    weather: { main: string; description: string; icon: string }[];
+  list: HourlyForecast[];
+  city: {
+    name: string;
+    country: string;
+    timezone: number;
   };
-  hourly: HourlyForecast[];
-  daily: DailyForecast[];
 }
+

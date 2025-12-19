@@ -1,5 +1,6 @@
 "use client";
 import { WeatherData } from "../../types/weather";
+import { HourlyForecast as HourlyForecastType } from "../../types/forecast";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
 import {
@@ -10,6 +11,12 @@ import {
     WiSnow,
     WiFog,
 } from "react-icons/wi";
+import HourlyForecast from "../../features/weather/HourlyForecast";
+
+interface WeatherCardProps {
+    data: WeatherData;
+    hourly: HourlyForecastType[];
+}
 
 function WeatherIcon({ main }: { main?: string }) {
     const key = (main || "").toLowerCase();
@@ -34,7 +41,7 @@ function WeatherIcon({ main }: { main?: string }) {
     }
 }
 
-export default function WeatherCard({ data }: { data: WeatherData }) {
+export default function WeatherCard({ data, hourly }: WeatherCardProps) {
     const { unit } = useWeatherContext();
     const main = data.weather?.[0]?.main;
     const description = data.weather?.[0]?.description ?? "";
@@ -104,6 +111,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
 
                 <UnitToggle />
             </div>
+            <HourlyForecast hourly={hourly} />
         </div>
     );
 }

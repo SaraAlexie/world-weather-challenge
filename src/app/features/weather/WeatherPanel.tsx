@@ -10,12 +10,12 @@ export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
     const { lat, lon } = location;
 
-    // fallback dummy values (won’t trigger fetch because of `enabled`)
-    // but satisfy the type requirements of useWeather
+    // Safe fallback values (hooks must always be called)
     const safeLat = lat ?? 0;
     const safeLon = lon ?? 0;
 
-    const { data, isLoading, error } = useWeather(safeLat, safeLon, unit);
+    const weather = useWeather(safeLat, safeLon, unit);
+    const forecast = useForecast(safeLat, safeLon, unit);
 
     if (lat === null || lon === null) {
         return (
@@ -27,11 +27,20 @@ export default function WeatherPanel() {
             </div>
         );
     }
-    if (isLoading) return <p>Loading weather...</p>;
-    if (error) return <p>Error loading weather.</p>;
-    if (!data) return <p>No data available.</p>;
 
-    const main = data.weather?.[0]?.main;
+    if (weather.isLoading || forecast.isLoading) {
+        return <p>Loading weather...</p>;
+    }
+
+    if (weather.error || forecast.error) {
+        return <p>Error loading weather.</p>;
+    }
+
+    if (!weather.data || !forecast.data) {
+        return null;
+    }
+
+    const main = weather.data.weather?.[0]?.main;
     const theme = getWeatherTheme(main);
 
     return (
@@ -40,18 +49,20 @@ export default function WeatherPanel() {
             style={{ background: theme.gradient, color: theme.textColor }}
         >
             <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                {/* SearchLocation: on top for mobile, on right for desktop */}
+                {/* SearchLocation */}
                 <div className="order-1 md:order-2 shrink-0 w-full md:w-auto">
                     <SearchLocation />
                 </div>
 
-                {/* WeatherCard: below search on mobile, left on desktop */}
+                {/* Weather content */}
                 <div className="order-2 md:order-1 w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col gap-32 xl:flex-row justify-center">
-                    <WeatherCard data={data} />
+                    <WeatherCard
+                        data={weather.data}
+                        hourly={forecast.data.list}
+                    />
 
-                    {/* Right: Detailed Metrics */}
                     <div className="xl:w-2/5">
-                        <WeatherDetails data={data} />
+                        <WeatherDetails data={weather.data} />
                     </div>
                 </div>
             </div>
