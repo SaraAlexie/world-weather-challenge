@@ -1,8 +1,8 @@
 "use client";
 import { WeatherData } from "../../types/weather";
+import { HourlyForecast as HourlyForecastType } from "../../types/forecast";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
-import WeatherDetails from "./WeatherDetails";
 import {
     WiDaySunny,
     WiCloud,
@@ -11,6 +11,12 @@ import {
     WiSnow,
     WiFog,
 } from "react-icons/wi";
+import HourlyForecast from "../../features/weather/HourlyForecast";
+
+interface WeatherCardProps {
+    data: WeatherData;
+    hourly: HourlyForecastType[];
+}
 
 function WeatherIcon({ main }: { main?: string }) {
     const key = (main || "").toLowerCase();
@@ -35,13 +41,13 @@ function WeatherIcon({ main }: { main?: string }) {
     }
 }
 
-export default function WeatherCard({ data }: { data: WeatherData }) {
+export default function WeatherCard({ data, hourly }: WeatherCardProps) {
     const { unit } = useWeatherContext();
     const main = data.weather?.[0]?.main;
     const description = data.weather?.[0]?.description ?? "";
 
     return (
-        <div className="w-full max-w-5xl mx-auto glass-card rounded-lg p-4 flex flex-col xl:flex-row gap-6">
+        <div>
             {/* Left: Main Info */}
             <div className="flex-1 space-y-4">
                 {/* Header */}
@@ -105,11 +111,7 @@ export default function WeatherCard({ data }: { data: WeatherData }) {
 
                 <UnitToggle />
             </div>
-
-            {/* Right: Detailed Metrics */}
-            <div className="xl:w-2/5">
-                <WeatherDetails data={data} />
-            </div>
+            <HourlyForecast hourly={hourly} />
         </div>
     );
 }

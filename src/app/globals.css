@@ -72,6 +72,13 @@ body {
     -webkit-backdrop-filter: blur(6px);
 }
 
+.scrollbar-hide {
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 /* responsive utilities for layout refinement */
 .weather-header {
     @apply flex flex-col gap-4 lg:flex-row lg:items-start;
