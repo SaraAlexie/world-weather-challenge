@@ -8,7 +8,7 @@ interface Props {
 }
 
 function formatDay(timestamp: number) {
-    return new Date(timestamp * 1000).toLocaleDateString([], {
+    return new Date(timestamp * 1000).toLocaleDateString("en-US", {
         weekday: "short",
     });
 }
@@ -17,7 +17,7 @@ export default function DailyForecast({ daily }: Props) {
     const { unit } = useWeatherContext();
 
     // Skip today, show next 7 days
-    const nextDays = daily.slice(1, 8);
+    const nextDays = daily.slice(1, 7);
 
     return (
         <div className="space-y-2">

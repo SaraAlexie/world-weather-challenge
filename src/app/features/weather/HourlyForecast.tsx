@@ -21,7 +21,7 @@ export default function HourlyForecast({ hourly }: Props) {
     const nextHours = hourly.slice(0, 12);
 
     return (
-        <div className="mt-4">
+        <div className="mt-4 xl:max-w-96">
             <h3 className="text-sm font-semibold mb-2 px-1">Hourly Forecast</h3>
 
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/30">

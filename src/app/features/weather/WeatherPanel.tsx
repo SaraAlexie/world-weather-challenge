@@ -4,7 +4,7 @@ import { useWeather, useForecast } from "../../hooks/WeatherHooks";
 import WeatherCard from "../../components/ui/WeatherCard";
 import SearchLocation from "../location/SearchLocation";
 import { getWeatherTheme } from "../../styles/weatherThemes";
-import WeatherDetails from "./WeatherDetails";
+import ForecastTabs from "./ForecastTabs";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
@@ -62,7 +62,10 @@ export default function WeatherPanel() {
                     />
 
                     <div className="xl:w-2/5">
-                        <WeatherDetails data={weather.data} />
+                        <ForecastTabs
+                            forecast={forecast.data}
+                            weatherData={weather.data}
+                        />
                     </div>
                 </div>
             </div>
