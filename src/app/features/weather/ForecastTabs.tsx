@@ -32,7 +32,7 @@ export default function ForecastTabs({ forecast, weatherData }: Props) {
                     : "bg-white/20 text-white hover:bg-white/30"
             }`}
                 >
-                    7-Day
+                    5-Day
                 </button>
 
                 <button

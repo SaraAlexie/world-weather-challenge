@@ -16,8 +16,8 @@ function formatDay(timestamp: number) {
 export default function DailyForecast({ daily }: Props) {
     const { unit } = useWeatherContext();
 
-    // Skip today, show next 7 days
-    const nextDays = daily.slice(1, 7);
+    // Skip today, show next 5 days
+    const nextDays = daily.slice(1, 6);
 
     return (
         <div className="space-y-2">
