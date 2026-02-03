@@ -4,7 +4,6 @@ export type WeatherTheme = {
 };
 
 export function getWeatherTheme(main: string | undefined): WeatherTheme {
-    // map main weather description to a pleasant gradient
     switch ((main || "").toLowerCase()) {
         case "clear":
             return {
