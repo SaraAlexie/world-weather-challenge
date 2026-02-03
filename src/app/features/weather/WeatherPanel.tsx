@@ -3,6 +3,7 @@ import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useWeather, useForecast } from "../../hooks/WeatherHooks";
 import WeatherCard from "../../components/ui/WeatherCard";
 import SearchLocation from "../location/SearchLocation";
+import { isDaytime } from "../../utils/isDaytime";
 import { getWeatherTheme } from "../../styles/weatherThemes";
 import ForecastTabs from "./ForecastTabs";
 
@@ -10,7 +11,6 @@ export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
     const { lat, lon } = location;
 
-    // Safe fallback values (hooks must always be called)
     const safeLat = lat ?? 0;
     const safeLon = lon ?? 0;
 
@@ -40,16 +40,23 @@ export default function WeatherPanel() {
         return null;
     }
 
-    const main = weather.data.weather?.[0]?.main;
-    const theme = getWeatherTheme(main);
+    const { dt, sys, weather: weatherArr } = weather.data;
+
+    const description = weatherArr?.[0]?.description;
+    const isDay = isDaytime(dt, sys.sunrise, sys.sunset);
+
+    const theme = getWeatherTheme(description, isDay);
 
     return (
         <div
             className="weather-panel-bg"
-            style={{ background: theme.gradient, color: theme.textColor }}
+            style={{
+                background: theme.gradient,
+                color: theme.textColor,
+            }}
         >
             <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                {/* SearchLocation */}
+                {/* Search */}
                 <div className="order-1 md:order-2 shrink-0 w-full md:w-auto">
                     <SearchLocation />
                 </div>
