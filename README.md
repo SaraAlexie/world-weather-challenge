@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 # World Weather
 
-Works with the use of World Weather API. To run it locally you will need an API key from the World Weather API.
+Works with the use of World Weather API. To run it locally you will need an API key from the World Weather API. If that is not an option for you, check the deployed version of the project out at https://worldweather-sann.vercel.app/ 
 
 ## Structure and seperation of concerns
 
