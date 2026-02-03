@@ -3,48 +3,18 @@ import { WeatherData } from "../../types/weather";
 import { HourlyForecast as HourlyForecastType } from "../../types/forecast";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import UnitToggle from "../../features/weather/UnitToggle";
-import {
-    WiDaySunny,
-    WiCloud,
-    WiRain,
-    WiThunderstorm,
-    WiSnow,
-    WiFog,
-} from "react-icons/wi";
 import HourlyForecast from "../../features/weather/HourlyForecast";
+import WeatherIcon from "./WeatherIcon";
 
 interface WeatherCardProps {
     data: WeatherData;
     hourly: HourlyForecastType[];
 }
 
-function WeatherIcon({ main }: { main?: string }) {
-    const key = (main || "").toLowerCase();
-    switch (key) {
-        case "clear":
-            return <WiDaySunny size={86} className="text-yellow-300" />;
-        case "clouds":
-            return <WiCloud size={86} className="text-gray-200" />;
-        case "rain":
-        case "drizzle":
-            return <WiRain size={86} className="text-blue-200" />;
-        case "thunderstorm":
-            return <WiThunderstorm size={86} className="text-purple-200" />;
-        case "snow":
-            return <WiSnow size={86} className="text-sky-50" />;
-        case "mist":
-        case "haze":
-        case "fog":
-            return <WiFog size={86} className="text-gray-100" />;
-        default:
-            return <WiDaySunny size={86} className="text-yellow-200" />;
-    }
-}
-
 export default function WeatherCard({ data, hourly }: WeatherCardProps) {
     const { unit } = useWeatherContext();
-    const main = data.weather?.[0]?.main;
     const description = data.weather?.[0]?.description ?? "";
+    const icon = data.weather?.[0]?.icon ?? "";
 
     return (
         <div>
@@ -61,7 +31,7 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
                         </p>
                     </div>
                     <div className="shrink-0 self-start sm:self-center">
-                        <WeatherIcon main={main} />
+                        <WeatherIcon description={description} icon={icon} />
                     </div>
                 </div>
 
