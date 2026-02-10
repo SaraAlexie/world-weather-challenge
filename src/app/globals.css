@@ -22,7 +22,9 @@ body {
 .weather-panel-bg {
     min-height: 100%;
     padding: 1rem;
-    transition: background 400ms ease, color 400ms ease;
+    transition:
+        background 400ms ease,
+        color 400ms ease;
 }
 
 .weather-icon {
@@ -98,4 +100,19 @@ body {
 
 .weather-card-container {
     @apply w-full lg:w-1/3;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 180ms ease forwards;
 }

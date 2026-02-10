@@ -21,7 +21,7 @@ export interface GeoLocation {
 // returns empty array if query is empty
 export async function fetchLocation(
     query: string,
-    limit = 5
+    limit = 5,
 ): Promise<GeoLocation[]> {
     if (!query) return [];
 
@@ -30,7 +30,7 @@ export async function fetchLocation(
 
     if (!response.ok) {
         throw new Error(
-            `Failed to fetch location data: ${response.statusText}`
+            `Failed to fetch location data: ${response.statusText}`,
         );
     }
 
@@ -56,7 +56,7 @@ function formatLocationName(loc: GeoLocation): string {
     return parts.filter(Boolean).join(", ").trim();
 }
 
-export default function SearchLocation() {
+export default function SearchLocation({ autoFocus }: { autoFocus?: boolean }) {
     // local state to store the input query
     const [query, setQuery] = useState("");
     const [showSearch, setShowSearch] = useState(false);
@@ -98,7 +98,7 @@ export default function SearchLocation() {
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
             setSelectedIndex(
-                (prev) => (prev - 1 + data!.length) % data!.length
+                (prev) => (prev - 1 + data!.length) % data!.length,
             );
         } else if (e.key === "Enter" && selectedIndex >= 0) {
             e.preventDefault();
@@ -154,6 +154,7 @@ export default function SearchLocation() {
                                 <input
                                     id="location-search"
                                     value={query}
+                                    autoFocus={autoFocus}
                                     onChange={(e) => setQuery(e.target.value)}
                                     onKeyDown={handleKeyDown}
                                     placeholder="Enter city or place name"
