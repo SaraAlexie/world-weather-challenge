@@ -11,12 +11,6 @@ export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
     const { lat, lon } = location;
 
-    const safeLat = lat ?? 0;
-    const safeLon = lon ?? 0;
-
-    const weather = useWeather(safeLat, safeLon, unit);
-    const forecast = useForecast(safeLat, safeLon, unit);
-
     if (lat === null || lon === null) {
         return (
             <div>
@@ -27,6 +21,9 @@ export default function WeatherPanel() {
             </div>
         );
     }
+
+    const weather = useWeather(lat, lon, unit);
+    const forecast = useForecast(lat, lon, unit);
 
     if (weather.isLoading || forecast.isLoading) {
         return <p>Loading weather...</p>;

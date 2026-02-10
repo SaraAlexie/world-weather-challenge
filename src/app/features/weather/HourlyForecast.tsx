@@ -2,6 +2,7 @@
 
 import { HourlyForecast as HourlyForecastType } from "../../types/forecast";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
+import next from "next";
 
 interface Props {
     hourly: HourlyForecastType[];
@@ -17,12 +18,11 @@ function formatHour(timestamp: number) {
 export default function HourlyForecast({ hourly }: Props) {
     const { unit } = useWeatherContext();
 
-    // Take only the next 12 hours
-    const nextHours = hourly.slice(0, 12);
+    const nextHours = hourly.slice(0, 16); // Next 48 hours (3-hour intervals)
 
     return (
         <div className="mt-4 xl:max-w-96">
-            <h3 className="text-sm font-semibold mb-2 px-1">Hourly Forecast</h3>
+            <h3 className="text-sm font-semibold mb-2 px-1">Next 48 hours</h3>
 
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/30">
                 {nextHours.map((hour) => (
