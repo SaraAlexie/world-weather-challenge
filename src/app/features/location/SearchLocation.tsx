@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
 import { useDebounce } from "../../hooks/UseDebounce";
-import { FiSearch, FiLoader, FiX } from "react-icons/fi";
+import { FiSearch, FiLoader } from "react-icons/fi";
 
 // shape of location data from OpenWeather Geocoding API
 export interface GeoLocation {
@@ -14,11 +14,6 @@ export interface GeoLocation {
     country?: string;
 }
 
-// fetch location data from backend API
-// limit parameter controls number of results returned
-// returns an array of GeoLocation objects
-// throws error if fetch fails
-// returns empty array if query is empty
 export async function fetchLocation(
     query: string,
     limit = 5,
@@ -38,9 +33,6 @@ export async function fetchLocation(
     return Array.isArray(data) ? data : [];
 }
 
-// custom hook to use location search
-// uses react-query to fetch and cache location data
-// only enabled if query is non-empty
 export function useLocation(query: string) {
     return useQuery<GeoLocation[]>({
         queryKey: ["location", query],
@@ -50,59 +42,48 @@ export function useLocation(query: string) {
     });
 }
 
-// assembles the name using optional state and country, removes empty values
 function formatLocationName(loc: GeoLocation): string {
     const parts = [loc.name, loc.state, loc.country && `(${loc.country})`];
     return parts.filter(Boolean).join(", ").trim();
 }
 
 export default function SearchLocation({ autoFocus }: { autoFocus?: boolean }) {
-    // local state to store the input query
     const [query, setQuery] = useState("");
-    const [showSearch, setShowSearch] = useState(false);
-    // debounced version of the query to limit API calls when typing
     const debouncedQuery = useDebounce(query, 500);
-    // extracts context functions for updating weather and map state
     const { setLocation } = useWeatherContext();
     const { setMarkerPosition } = useMapMarkerContext();
-    // executes the geolocation query based on the current input query
     const { data, isLoading, error } = useLocation(debouncedQuery);
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const resultsRef = useRef<HTMLUListElement>(null);
 
-    // guard against null/undefined location
-    // update weather context and map marker position
-    // fills the input with the selected location name
+    const hasResults = !!(query && data && data.length > 0);
+
     const handleSelectLocation = (loc: GeoLocation) => {
         if (!loc) return;
-
         setLocation({ lat: loc.lat, lon: loc.lon });
         setMarkerPosition([loc.lat, loc.lon]);
-
         setQuery(formatLocationName(loc));
-        setSelectedIndex(-1); // reset selection
+        setSelectedIndex(-1);
     };
 
-    // determines if there are results to display
-    // only true if query is non-empty and data has results
-    const hasResults = query && data && data.length > 0;
-    hasResults && console.log("Search results:", data);
+    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery(e.target.value);
+        setSelectedIndex(-1);
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!hasResults) return;
+        if (!hasResults || !data) return;
 
         if (e.key === "ArrowDown") {
             e.preventDefault();
-            setSelectedIndex((prev) => (prev + 1) % data!.length);
+            setSelectedIndex((prev) => (prev + 1) % data.length);
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            setSelectedIndex(
-                (prev) => (prev - 1 + data!.length) % data!.length,
-            );
+            setSelectedIndex((prev) => (prev - 1 + data.length) % data.length);
         } else if (e.key === "Enter" && selectedIndex >= 0) {
             e.preventDefault();
-            handleSelectLocation(data![selectedIndex]);
+            handleSelectLocation(data[selectedIndex]);
         }
     };
 
@@ -117,105 +98,68 @@ export default function SearchLocation({ autoFocus }: { autoFocus?: boolean }) {
 
     return (
         <div className="relative w-full">
-            {/* Toggle Button on Mobile */}
-            <div className="lg:hidden flex justify-end mb-2">
-                <button
-                    onClick={() => setShowSearch((prev) => !prev)}
-                    className="p-2 rounded-full bg-white/70 backdrop-blur text-gray-700 hover:bg-white shadow"
-                    aria-label="Toggle Search"
-                >
-                    {showSearch ? <FiX size={20} /> : <FiSearch size={20} />}
-                </button>
+            {/* Input row */}
+            <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/20 backdrop-blur border border-white/30 focus-within:bg-white/30 focus-within:border-white/50 transition">
+                <span className="text-current opacity-60 shrink-0">
+                    {isLoading ? (
+                        <FiLoader size={15} className="animate-spin" />
+                    ) : (
+                        <FiSearch size={15} />
+                    )}
+                </span>
+                <input
+                    id="location-search"
+                    value={query}
+                    autoFocus={autoFocus}
+                    onChange={handleQueryChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Search location..."
+                    aria-label="Search location"
+                    className="w-full bg-transparent text-sm text-current placeholder-current/50 outline-none"
+                />
             </div>
 
-            {/* Full Search UI */}
-            <div
-                className={`transition-all ${
-                    showSearch ? "block" : "hidden"
-                } lg:block`}
-            >
-                <div className="w-full max-w-sm bg-white/90 backdrop-blur rounded-lg p-3 shadow-md">
-                    <form
-                        onSubmit={(e) => e.preventDefault()}
-                        className="search-location mt-2"
-                    >
-                        <label htmlFor="location-search" className="sr-only">
-                            Search location
-                        </label>
-                        <div className="flex gap-2">
-                            <div className="w-full search-input-wrapper">
-                                <span className="search-input-icon text-gray-500">
-                                    {isLoading ? (
-                                        <FiLoader className="animate-spin" />
-                                    ) : (
-                                        <FiSearch />
-                                    )}
-                                </span>
-                                <input
-                                    id="location-search"
-                                    value={query}
-                                    autoFocus={autoFocus}
-                                    onChange={(e) => setQuery(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                    placeholder="Enter city or place name"
-                                    aria-label="Search location"
-                                    className="w-full rounded border border-gray-400 px-3 py-2 search-input-field placeholder-gray-500 text-gray-800 bg-white"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="rounded bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
-                                aria-label="Search"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
-
-                    {query && (
-                        <>
-                            {isLoading && (
-                                <p className="mt-2 text-sm text-gray-600">
-                                    Searching...
-                                </p>
-                            )}
-                            {error && (
-                                <p className="mt-2 text-sm text-red-600">
-                                    Error searching location.
-                                </p>
-                            )}
-                            {data && data.length === 0 && (
-                                <p className="mt-2 text-black text-sm">
-                                    No results found.
-                                </p>
-                            )}
-                        </>
+            {/* Status messages */}
+            {query && (
+                <div className="mt-1 px-1">
+                    {error && (
+                        <p className="text-xs opacity-70">
+                            Could not fetch results.
+                        </p>
                     )}
-
-                    {hasResults && (
-                        <ul className="mt-3 border rounded divide-y search-results-bg shadow-lg fade-in overflow-hidden">
-                            {data!.map((loc, idx) => (
-                                <li
-                                    key={`${loc.name}-${loc.lat}-${loc.lon}-${
-                                        loc.state ?? ""
-                                    }-${loc.country ?? ""}`}
-                                    onClick={() => handleSelectLocation(loc)}
-                                    className={`px-3 py-2 cursor-pointer text-sm flex items-center gap-2 ${
-                                        idx === selectedIndex
-                                            ? "bg-blue-100"
-                                            : "hover:bg-blue-50"
-                                    }`}
-                                >
-                                    <FiSearch className="text-gray-500" />
-                                    <span className="truncate">
-                                        {formatLocationName(loc)}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
+                    {data && data.length === 0 && !isLoading && (
+                        <p className="text-xs opacity-70">No results found.</p>
                     )}
                 </div>
-            </div>
+            )}
+
+            {/* Results dropdown */}
+            {hasResults && data && (
+                <ul
+                    ref={resultsRef}
+                    className="absolute z-100 mt-2 w-full rounded-xl bg-white/90 backdrop-blur shadow-lg overflow-hidden border border-white/40 divide-y divide-gray-100"
+                >
+                    {data.map((loc, idx) => (
+                        <li
+                            key={`${loc.name}-${loc.lat}-${loc.lon}-${loc.state ?? ""}-${loc.country ?? ""}`}
+                            onClick={() => handleSelectLocation(loc)}
+                            className={`px-4 py-2.5 cursor-pointer text-sm text-gray-800 flex items-center gap-2 transition-colors ${
+                                idx === selectedIndex
+                                    ? "bg-blue-50"
+                                    : "hover:bg-gray-50"
+                            }`}
+                        >
+                            <FiSearch
+                                size={13}
+                                className="text-gray-400 shrink-0"
+                            />
+                            <span className="truncate">
+                                {formatLocationName(loc)}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }

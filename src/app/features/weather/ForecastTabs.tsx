@@ -2,13 +2,14 @@
 
 import { useState, useMemo } from "react";
 import type { ForecastResponse } from "../../types/forecast";
+import type { WeatherData } from "../../types/weather";
 import DailyForecast from "./DailyForecast";
 import WeatherDetails from "./WeatherDetails";
 import { buildDailyFromList } from "../../utils/forecast";
 
 interface Props {
     forecast: ForecastResponse;
-    weatherData: any;
+    weatherData: WeatherData;
 }
 
 type Tab = "daily" | "details";
@@ -16,7 +17,7 @@ type Tab = "daily" | "details";
 export default function ForecastTabs({ forecast, weatherData }: Props) {
     const [activeTab, setActiveTab] = useState<Tab>("daily");
 
-    // 🔥 Build daily forecast in a memo so it only recomputes when forecast changes
+    // Build daily forecast from list, recomputes only when forecast changes
     const daily = useMemo(() => buildDailyFromList(forecast), [forecast]);
 
     return (
@@ -34,7 +35,6 @@ export default function ForecastTabs({ forecast, weatherData }: Props) {
                 >
                     5-Day
                 </button>
-
                 <button
                     onClick={() => setActiveTab("details")}
                     className={`flex-1 rounded-full px-3 py-1.5 text-sm font-medium transition

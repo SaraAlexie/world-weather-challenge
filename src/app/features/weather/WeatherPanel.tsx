@@ -8,7 +8,7 @@ import SearchLocation from "../location/SearchLocation";
 import { isDaytime } from "../../utils/isDaytime";
 import { getWeatherTheme } from "../../styles/weatherThemes";
 import ForecastTabs from "./ForecastTabs";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiX } from "react-icons/fi";
 
 export default function WeatherPanel() {
     const { location, unit } = useWeatherContext();
@@ -17,8 +17,15 @@ export default function WeatherPanel() {
     const [searchOpen, setSearchOpen] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
 
-    // Close on outside click
+    // Hooks must be called before any conditional returns.
+    // Fallback to 0 is safe — the null check below prevents rendering until valid coords exist.
+    const weather = useWeather(lat ?? 0, lon ?? 0, unit);
+    const forecast = useForecast(lat ?? 0, lon ?? 0, unit);
+
+    // Close search on outside click or ESC key
     useEffect(() => {
+        if (!searchOpen) return;
+
         function handleClickOutside(e: MouseEvent) {
             if (
                 searchRef.current &&
@@ -28,28 +35,15 @@ export default function WeatherPanel() {
             }
         }
 
-        if (searchOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
+        function handleEsc(e: KeyboardEvent) {
+            if (e.key === "Escape") setSearchOpen(false);
         }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleEsc);
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [searchOpen]);
-
-    // Close on ESC
-    useEffect(() => {
-        function handleEsc(e: KeyboardEvent) {
-            if (e.key === "Escape") {
-                setSearchOpen(false);
-            }
-        }
-
-        if (searchOpen) {
-            document.addEventListener("keydown", handleEsc);
-        }
-
-        return () => {
             document.removeEventListener("keydown", handleEsc);
         };
     }, [searchOpen]);
@@ -61,9 +55,6 @@ export default function WeatherPanel() {
             </div>
         );
     }
-
-    const weather = useWeather(lat, lon, unit);
-    const forecast = useForecast(lat, lon, unit);
 
     if (weather.isLoading || forecast.isLoading) {
         return <p>Loading weather...</p>;
@@ -88,27 +79,36 @@ export default function WeatherPanel() {
                 color: theme.textColor,
             }}
         >
-            {/* EXPANDABLE SEARCH HEADER */}
-            <div className="w-full max-w-5xl mx-auto px-4 pt-6">
-                <div
-                    ref={searchRef}
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        searchOpen ? "w-full" : "w-32"
-                    }`}
-                >
-                    {!searchOpen ? (
-                        <button
-                            onClick={() => setSearchOpen(true)}
-                            className="flex items-center gap-2 text-sm font-medium opacity-90 hover:opacity-100 transition"
-                        >
-                            <FiSearch />
-                            Search
-                        </button>
-                    ) : (
-                        <div className="animate-fadeIn">
-                            <SearchLocation autoFocus />
-                        </div>
-                    )}
+            {/* SEARCH HEADER — icon anchored to top right, expands left */}
+            <div className="relative z-100 w-full max-w-5xl mx-auto px-4 pt-6">
+                <div className="flex justify-end">
+                    <div
+                        ref={searchRef}
+                        className={`flex items-center justify-end transition-all duration-300 ease-in-out ${
+                            searchOpen ? "w-full max-w-sm" : "w-8"
+                        }`}
+                    >
+                        {searchOpen ? (
+                            <div className="flex items-center gap-2 w-full animate-fadeIn">
+                                <SearchLocation autoFocus />
+                                <button
+                                    onClick={() => setSearchOpen(false)}
+                                    className="shrink-0 p-1 rounded-full opacity-70 hover:opacity-100 transition"
+                                    aria-label="Close search"
+                                >
+                                    <FiX size={18} />
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setSearchOpen(true)}
+                                className="p-1 rounded-full opacity-70 hover:opacity-100 transition"
+                                aria-label="Open search"
+                            >
+                                <FiSearch size={20} />
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
