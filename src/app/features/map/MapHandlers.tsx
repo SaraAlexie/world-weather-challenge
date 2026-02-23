@@ -3,11 +3,21 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
+import { useWeatherContext } from "../../providers/WeatherContextProvider";
 
 export default function MapHandlers() {
     const map = useMap();
-    const { markerPosition } = useMapMarkerContext();
+    const { markerPosition, setMarkerPosition } = useMapMarkerContext();
+    const { location } = useWeatherContext();
 
+    // Sync weather context location to marker position
+    useEffect(() => {
+        if (location.lat !== null && location.lon !== null) {
+            setMarkerPosition([location.lat, location.lon]);
+        }
+    }, [location.lat, location.lon, setMarkerPosition]);
+
+    // Animate map to marker position
     useEffect(() => {
         if (!map || !markerPosition) return;
         try {
