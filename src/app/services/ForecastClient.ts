@@ -1,4 +1,4 @@
-import { ForecastResponse } from "../../types/forecast";
+import { ForecastResponse } from "../types/forecast";
 
 export async function fetchForecast(
   lat: number,

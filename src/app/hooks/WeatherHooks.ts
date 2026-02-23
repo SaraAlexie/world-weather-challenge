@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchWeather } from "../features/weather/WeatherClient";
-import { fetchForecast } from "../features/weather/ForecastClient";
+import { fetchWeather } from "../services/WeatherClient";
+import { fetchForecast } from "../services/ForecastClient";
 import type { ForecastResponse } from "../types/forecast";
 
 /**
