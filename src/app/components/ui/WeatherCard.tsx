@@ -1,4 +1,5 @@
 "use client";
+
 import { WeatherData } from "../../types/weather";
 import { HourlyForecast as HourlyForecastType } from "../../types/forecast";
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
@@ -41,7 +42,6 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
                 </div>
 
                 {/* Mini Metrics */}
-
                 <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-center">
                     <div>
                         <p className="font-medium text-lg muted-text">
@@ -52,7 +52,6 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
                             {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
-
                     <div>
                         <p className="font-medium text-lg muted-text">
                             Humidity
@@ -61,7 +60,6 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
                             {data.main.humidity}%
                         </p>
                     </div>
-
                     <div>
                         <p className="font-medium text-lg muted-text">High</p>
                         <p className="font-semibold text-2xl">
@@ -69,7 +67,6 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
                             {unit === "metric" ? "C" : "F"}
                         </p>
                     </div>
-
                     <div>
                         <p className="font-medium text-lg muted-text">Low</p>
                         <p className="font-semibold text-2xl">
@@ -81,7 +78,9 @@ export default function WeatherCard({ data, hourly }: WeatherCardProps) {
 
                 <UnitToggle />
             </div>
-            <HourlyForecast hourly={hourly} />
+
+            {/* Hourly forecast — renders even if empty while forecast loads */}
+            {hourly.length > 0 && <HourlyForecast hourly={hourly} />}
         </div>
     );
 }

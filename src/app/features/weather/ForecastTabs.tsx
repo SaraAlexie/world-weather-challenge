@@ -27,22 +27,22 @@ export default function ForecastTabs({ forecast, weatherData }: Props) {
                 <button
                     onClick={() => setActiveTab("daily")}
                     className={`flex-1 rounded-full px-3 py-1.5 text-sm font-medium transition
-            ${
-                activeTab === "daily"
-                    ? "bg-white/90 text-gray-900"
-                    : "bg-white/20 text-white hover:bg-white/30"
-            }`}
+                        ${
+                            activeTab === "daily"
+                                ? "bg-white/90 text-gray-900"
+                                : "bg-white/20 text-white hover:bg-white/30"
+                        }`}
                 >
                     5-Day
                 </button>
                 <button
                     onClick={() => setActiveTab("details")}
                     className={`flex-1 rounded-full px-3 py-1.5 text-sm font-medium transition
-            ${
-                activeTab === "details"
-                    ? "bg-white/90 text-gray-900"
-                    : "bg-white/20 text-white hover:bg-white/30"
-            }`}
+                        ${
+                            activeTab === "details"
+                                ? "bg-white/90 text-gray-900"
+                                : "bg-white/20 text-white hover:bg-white/30"
+                        }`}
                 >
                     Details
                 </button>

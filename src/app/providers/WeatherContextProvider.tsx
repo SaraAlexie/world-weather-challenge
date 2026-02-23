@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import { DEFAULT_LOCATION } from "../config/defaults";
+import { Unit } from "../types/units";
 
 interface Location {
     lat: number | null;
@@ -13,8 +14,6 @@ interface WeatherContextValue {
     setLocation: (loc: Location) => void;
 }
 
-type Unit = "metric" | "imperial";
-
 interface WeatherContextValue {
     location: Location;
     setLocation: (loc: Location) => void;
@@ -24,7 +23,7 @@ interface WeatherContextValue {
 
 // create the context
 const WeatherContext = createContext<WeatherContextValue | undefined>(
-    undefined
+    undefined,
 );
 
 // component that provides the context
@@ -54,7 +53,7 @@ export function useWeatherContext() {
     const ctx = useContext(WeatherContext);
     if (!ctx) {
         throw new Error(
-            "useWeatherContext must be used within WeatherContextProvider"
+            "useWeatherContext must be used within WeatherContextProvider",
         );
     }
     return ctx;
