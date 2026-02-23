@@ -1,100 +1,61 @@
-import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+"use client";
+
 import { useWeatherContext } from "../../providers/WeatherContextProvider";
-import { useMapMarkerContext } from "../../providers/MapMarkerContextProvider";
-import { useDebounce } from "../../hooks/UseDebounce";
-import { FiSearch, FiLoader } from "react-icons/fi";
+import {
+    useLocationSearch,
+    type LocationResult,
+} from "../../services/location";
+import { FiMapPin, FiSearch, FiLoader } from "react-icons/fi";
+import { useRef, useState } from "react";
 
-// shape of location data from OpenWeather Geocoding API
-export interface GeoLocation {
-    name: string;
-    lat: number;
-    lon: number;
-    state?: string;
-    country?: string;
+interface SearchLocationProps {
+    autoFocus?: boolean;
 }
 
-export async function fetchLocation(
-    query: string,
-    limit = 5,
-): Promise<GeoLocation[]> {
-    if (!query) return [];
-
-    const url = `/api/location?q=${encodeURIComponent(query)}&limit=${limit}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        throw new Error(
-            `Failed to fetch location data: ${response.statusText}`,
-        );
-    }
-
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
-}
-
-export function useLocation(query: string) {
-    return useQuery<GeoLocation[]>({
-        queryKey: ["location", query],
-        queryFn: () => fetchLocation(query, 5),
-        staleTime: 1000 * 60 * 60,
-        enabled: !!query,
-    });
-}
-
-function formatLocationName(loc: GeoLocation): string {
-    const parts = [loc.name, loc.state, loc.country && `(${loc.country})`];
-    return parts.filter(Boolean).join(", ").trim();
-}
-
-export default function SearchLocation({ autoFocus }: { autoFocus?: boolean }) {
-    const [query, setQuery] = useState("");
-    const debouncedQuery = useDebounce(query, 500);
+export default function SearchLocation({
+    autoFocus = false,
+}: SearchLocationProps) {
     const { setLocation } = useWeatherContext();
-    const { setMarkerPosition } = useMapMarkerContext();
-    const { data, isLoading, error } = useLocation(debouncedQuery);
-
+    const { query, setQuery, results, isLoading, error } =
+        useLocationSearch(500);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const resultsRef = useRef<HTMLUListElement>(null);
 
-    const hasResults = !!(query && data && data.length > 0);
-
-    const handleSelectLocation = (loc: GeoLocation) => {
-        if (!loc) return;
-        setLocation({ lat: loc.lat, lon: loc.lon });
-        setMarkerPosition([loc.lat, loc.lon]);
-        setQuery(formatLocationName(loc));
+    function handleSelectLocation(location: LocationResult) {
+        setLocation({
+            lat: location.lat,
+            lon: location.lon,
+        });
+        setQuery("");
         setSelectedIndex(-1);
-    };
+    }
 
-    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    function handleQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
         setQuery(e.target.value);
         setSelectedIndex(-1);
-    };
+    }
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (!hasResults || !data) return;
-
+    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === "ArrowDown") {
             e.preventDefault();
-            setSelectedIndex((prev) => (prev + 1) % data.length);
+            setSelectedIndex((prev) =>
+                prev < results.length - 1 ? prev + 1 : prev,
+            );
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
-            setSelectedIndex((prev) => (prev - 1 + data.length) % data.length);
+            setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         } else if (e.key === "Enter" && selectedIndex >= 0) {
             e.preventDefault();
-            handleSelectLocation(data[selectedIndex]);
+            handleSelectLocation(results[selectedIndex]);
         }
-    };
+    }
 
-    useEffect(() => {
-        if (resultsRef.current && selectedIndex >= 0) {
-            const activeItem = resultsRef.current.children[
-                selectedIndex
-            ] as HTMLElement;
-            if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
-        }
-    }, [selectedIndex]);
+    function formatLocationName(loc: LocationResult): string {
+        const parts = [loc.name, loc.state, loc.country].filter(Boolean);
+        return parts.join(", ");
+    }
+
+    const hasResults = results.length > 0;
 
     return (
         <div className="relative w-full">
@@ -127,19 +88,19 @@ export default function SearchLocation({ autoFocus }: { autoFocus?: boolean }) {
                             Could not fetch results.
                         </p>
                     )}
-                    {data && data.length === 0 && !isLoading && (
+                    {!isLoading && hasResults === false && (
                         <p className="text-xs opacity-70">No results found.</p>
                     )}
                 </div>
             )}
 
             {/* Results dropdown */}
-            {hasResults && data && (
+            {hasResults && (
                 <ul
                     ref={resultsRef}
                     className="absolute z-100 mt-2 w-full rounded-xl bg-white/90 backdrop-blur shadow-lg overflow-hidden border border-white/40 divide-y divide-gray-100"
                 >
-                    {data.map((loc, idx) => (
+                    {results.map((loc, idx) => (
                         <li
                             key={`${loc.name}-${loc.lat}-${loc.lon}-${loc.state ?? ""}-${loc.country ?? ""}`}
                             onClick={() => handleSelectLocation(loc)}
