@@ -1,5 +1,7 @@
 // metric is default unit for temp
-export async function fetchWeather(lat: number, lon: number, unit: "metric" | "imperial" = "metric") {
+import { Unit } from "../types/units";
+
+export async function fetchWeather(lat: number, lon: number, unit: Unit = "metric") {
     
     const url = `/api/weather?lat=${lat}&lon=${lon}&unit=${unit}`;
     const response = await fetch(url);

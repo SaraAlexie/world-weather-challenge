@@ -1,9 +1,10 @@
 import { ForecastResponse } from "../types/forecast";
+import { Unit } from "../types/units";
 
 export async function fetchForecast(
   lat: number,
   lon: number,
-  unit: "metric" | "imperial"
+  unit: Unit
 ): Promise<ForecastResponse> {
   const response = await fetch(
     `/api/forecast?lat=${lat}&lon=${lon}&unit=${unit}`
