@@ -5,7 +5,7 @@ import {
     useLocationSearch,
     type LocationResult,
 } from "../../services/location";
-import { FiMapPin, FiSearch, FiLoader } from "react-icons/fi";
+import { FiSearch, FiLoader } from "react-icons/fi";
 import { useRef, useState } from "react";
 
 interface SearchLocationProps {
